@@ -1,8 +1,0 @@
-version: 2
-
-sources:
-  - name: arth_bq  # This is the alias we will use in SQL
-    database: arth-insight
-    schema: stock_raw_data
-    tables:
-      - name: stock_intelligence_v3 # Your raw table
