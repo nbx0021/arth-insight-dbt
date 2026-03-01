@@ -1,7 +1,16 @@
-{{ config(materialized='table') }}
+{{ 
+    config(
+        materialized='incremental',
+        unique_key='ticker'
+    ) 
+}}
 
 with stocks as (
     select * from {{ ref('stg_stocks') }}
+    
+    {% if is_incremental() %}
+        where last_updated > (select max(last_updated) from {{ this }})
+    {% endif %}
 ),
 
 logic_layer as (
@@ -40,7 +49,7 @@ scored_stocks as (
                     (CASE WHEN debt_to_equity < 0.5 THEN 10 WHEN debt_to_equity < 1.0 THEN 5 ELSE 0 END)
             END) +
 
-            -- 2. STABILITY & OWNERSHIP (Max 25 Points) - ALIGNING WITH DJANGO
+            -- 2. STABILITY & OWNERSHIP (Max 25 Points)
             (CASE WHEN promoter_holding > 50 THEN 10 WHEN promoter_holding > 30 THEN 5 ELSE 0 END) +
             (CASE WHEN mcap > 100000 THEN 10 WHEN mcap > 20000 THEN 5 ELSE 0 END) +
             (CASE WHEN div_yield > 0 THEN 5 ELSE 0 END) +

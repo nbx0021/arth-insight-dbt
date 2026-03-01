@@ -2,13 +2,15 @@ version: 2
 
 sources:
   - name: arth_bq
-    database: arth-insight  # Your Project ID
-    schema: stock_raw_data  # 👈 CHANGE THIS to the actual dataset name
+    database: arth-insight-v2
+    schema: stock_raw_data
     
     tables:
-      - name: stock_intelligence_v3 # 👈 This is the table name
+      - name: stock_intelligence_v3
         config:
           loaded_at_field: last_updated
           freshness:
-            warn_after: {count: 2, period: hour}
+            warn_after: {count: 24, period: hour}
             error_after: {count: 72, period: hour}
+            # 🟢 The filter saves your BigQuery Quota
+            filter: last_updated >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 7 DAY)
