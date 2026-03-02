@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: arth_bq
-    database: arth-insight  # Your Project ID
+    database: arth-insight-v2  # Your Project ID
     schema: stock_raw_data  # 👈 CHANGE THIS to the actual dataset name
     
     tables:
