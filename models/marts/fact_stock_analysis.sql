@@ -1,4 +1,4 @@
-{{ config(materialized='table') }}
+{{ config(materialized='view') }}
 
 with stocks as (
     select * from {{ ref('stg_stocks') }}
