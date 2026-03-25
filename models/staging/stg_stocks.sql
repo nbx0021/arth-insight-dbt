@@ -1,5 +1,7 @@
 with raw as (
     select * from {{ source('arth_bq', 'stock_intelligence_v3') }}
+    -- 🟢 THE FIX: Sort by date and only keep the #1 newest row per ticker
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY ticker ORDER BY last_updated DESC) = 1
 ),
 
 cleaned as (
